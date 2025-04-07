@@ -12,7 +12,7 @@ public class JavaApplication4 {
         try (Scanner sc = new Scanner(System.in)) {
             System.out.println("----BIENVENIDOS AL SISTEMA DE VENTAS DEL TEATRO MORO---- ");
 
-            final int CANTIDAD_ENTRADAS = 2;
+            final int CANTIDAD_ENTRADAS = 3;
 
             int entradasVipDisponibles = CANTIDAD_ENTRADAS;
             int entradasPlateaBajaDisponibles = CANTIDAD_ENTRADAS;
@@ -25,13 +25,28 @@ public class JavaApplication4 {
             boolean muestraMenu = true;
             while (muestraMenu) {
                 int opcion = 0;
-                System.out.println("MENU PRINCIPAL: ");
-                System.out.println("- ELIGA EL NUMERO QUE CORRESPONDA A SU OPCION ");
-                System.out.println(" 1. COMPRAR ENTRADA ");
-                System.out.println(" 2. SALIR ");
 
-                opcion = sc.nextInt();
+                boolean mostrarMenuPrincipal = true;
+                while (mostrarMenuPrincipal) {
+                    System.out.println("MENU PRINCIPAL: ");
+                    System.out.println("- ELIGA EL NUMERO QUE CORRESPONDA A SU OPCION ");
+                    System.out.println(" 1. COMPRAR ENTRADA ");
+                    System.out.println(" 2. SALIR ");
 
+                    opcion = sc.nextInt();
+
+                    //validaciones menu principal
+                    if (opcion < 1) {
+                        System.out.println("\u001B[31m *** Opcion Invalida *** \u001B[31m");
+                        mostrarMenuPrincipal = true;
+                    } else if (opcion > 2) {
+                        System.out.println("\u001B[31m *** Opcion Invalida *** \u001B[31m");
+                        mostrarMenuPrincipal = true;
+                    }
+
+                    mostrarMenuPrincipal = false;
+
+                }
                 switch (opcion) {
                     case 1 -> {
                         System.out.println("Has elegido: OPCION 1 COMPRAR ENTRADA");
@@ -43,21 +58,64 @@ public class JavaApplication4 {
                         String nombre_tarifa = "";
                         double precio = 0;
                         double subtotal_con_descuento;
-                        int tipo_entrada;
+                        int tipo_entrada = 0;
                         int tipo_tarifa;
                         double total = 0;
                         int edad = 0;
 
-                        // VARIABLES
-                        // TIPOS DE ENTRADAS
-                        System.out.println("- ¿Que tipo de entrada desea comprar?");
-                        System.out.println("    Seleccione un numero de opcion del 1 al 4: ");
-                        System.out.println(" 1.- VIP , entradas disponibles:" + entradasVipDisponibles);
-                        System.out.println(" 2.- PLATEA BAJA,entradas disponibles:" + entradasPlateaBajaDisponibles);
-                        System.out.println(" 3.- PLATEA ALTA,entradas disponibles:" + entradasPlateaAltaDisponibles);
-                        System.out.println(" 4.- PALCO,entradas disponibles:" + entradasPalcoDisponibles);
-                        tipo_entrada = sc.nextInt();
+                        if ((entradasVipDisponibles == 0 && entradasPlateaBajaDisponibles == 0)
+                                && (entradasPlateaAltaDisponibles == 0 && entradasPalcoDisponibles == 0)) {
+                            boolean mostrarSalidaAgotadas = true;
+                            while (mostrarSalidaAgotadas) {
+                                System.out.println("\u001B[31m *** Entradas agotadas *** \u001B[31m");
+                                muestraMenu = true;
+                                int salir = 0;
+                                System.out.println("- ¿Desea salir del sistema?");
+                                System.out.println("1- Si ");
+                                System.out.println("2- No ");
+                                salir = sc.nextInt();
 
+                                //validaciones menu
+                                if (salir < 1) {
+                                    System.out.println("\u001B[31m *** Opcion Invalida *** \u001B[31m");
+                                    mostrarSalidaAgotadas = true;
+                                } else if (salir > 2) {
+                                    System.out.println("\u001B[31m *** Opcion Invalida *** \u001B[31m");
+                                    mostrarSalidaAgotadas = true;
+                                }
+
+                                if (salir == 1) {
+                                    //al agotarse entradas y usuario quiere salir, se cierra el sistema
+                                    System.exit(0);
+                                }
+
+                                mostrarSalidaAgotadas = false;
+                            }
+                        }
+
+                        // VARIABLES
+                        boolean mostrarMenuTipoEntrada = true;
+
+                        while (mostrarMenuTipoEntrada) {
+                            // TIPOS DE ENTRADAS
+                            System.out.println("- ¿Que tipo de entrada desea comprar?");
+                            System.out.println("     Seleccione un numero de opcion del 1 al 4: ");
+                            System.out.println(" 1.- VIP , entradas disponibles:" + entradasVipDisponibles);
+                            System.out.println(" 2.- PLATEA BAJA,entradas disponibles:" + entradasPlateaBajaDisponibles);
+                            System.out.println(" 3.- PLATEA ALTA,entradas disponibles:" + entradasPlateaAltaDisponibles);
+                            System.out.println(" 4.- PALCO,entradas disponibles:" + entradasPalcoDisponibles);
+                            tipo_entrada = sc.nextInt();
+
+                            if (tipo_entrada < 1) {
+                                System.out.println("\u001B[31m *** Opcion Invalida *** \u001B[31m");
+                                mostrarMenuTipoEntrada = true;
+                            } else if (tipo_entrada > 4) {
+                                System.out.println("\u001B[31m *** Opcion Invalida *** \u001B[31m");
+                                mostrarMenuTipoEntrada = true;
+                            } else {
+                                mostrarMenuTipoEntrada = false;
+                            }
+                        }
                         if (tipo_entrada == 1) {
                             if (entradasVipDisponibles > 0) {
                                 entradasVipDisponibles = entradasVipDisponibles - 1;
@@ -66,21 +124,21 @@ public class JavaApplication4 {
                                 muestraMenu = true;
                             }
                         } else if (tipo_entrada == 2) {
-                            if (entradasVipDisponibles > 0) {
+                            if (entradasPlateaBajaDisponibles > 0) {
                                 entradasPlateaBajaDisponibles = entradasPlateaBajaDisponibles - 1;
                             } else {
                                 System.out.println("\u001B[31m ***No quedan entradas PLATEA BAJA Disponibles*** \u001B[31m");
                                 muestraMenu = true;
                             }
                         } else if (tipo_entrada == 3) {
-                            if (entradasVipDisponibles > 0) {
+                            if (entradasPlateaAltaDisponibles > 0) {
                                 entradasPlateaAltaDisponibles = entradasPlateaAltaDisponibles - 1;
                             } else {
                                 System.out.println("\u001B[31m ***No quedan entradas PLATEA ALTA Disponibles*** \u001B[31m");
                                 muestraMenu = true;
                             }
                         } else if (tipo_entrada == 4) {
-                            if (entradasVipDisponibles > 0) {
+                            if (entradasPalcoDisponibles > 0) {
                                 entradasPalcoDisponibles = entradasPalcoDisponibles - 1;
                             } else {
                                 System.out.println("\u001B[31m ***No quedan entradas PALCO Disponibles*** \u001B[31m");
@@ -97,7 +155,7 @@ public class JavaApplication4 {
 
                                 if (edad < 1) {
                                     System.out.println("\u001B[31m ***Edad No Valida*** \u001B[31m");
-                                } else if (edad > 85) {
+                                } else if (edad > 100) {
                                     System.out.println("\u001B[31m ***Edad No Valida*** \u001B[31m");
                                 } else {
                                     muestraMenuEdad = false;
@@ -209,12 +267,9 @@ public class JavaApplication4 {
                             if (tipo_tarifa == 3) {
                                 System.out.println("\u001B[34m Descuento aplicado del 15%: $" + (int) descuento + "\u001B[31m");
                             }
-
                             System.out.println("\u001B[34m IVA incluido (19%): $" + (int) iva + "\u001B[31m");
                             System.out.println("\u001B[34m --------------------------------- \u001B[31m");
                             System.out.println("\u001B[34m Total a pagar: $" + (int) total + "\u001B[31m");
-                            System.out.println("\u001B[34m --------------------------------- \u001B[31m");
-
                             System.out.println("\u001B[34m --------------------------------- \u001B[31m");
                             System.out.println("\u001B[34m Cantidad Total de Entradas Vendidas:" + (int) contadorEntradas + "\u001B[31m");
                             System.out.println("\u001B[34m Total a Pagar Final:" + (int) acumuladorPrecioEntradas + "\u001B[31m");
